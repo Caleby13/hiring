@@ -4,6 +4,6 @@ import AlphaVantageController from '../controllers/AlphaVantageController'
 
 const routes = Router()
 
-routes.get('/1', AlphaVantageController.showOptionsEndpoint)
+routes.get('/searchEndpoint', AlphaVantageController.showOptionsEndpoint)
 
 export default routes
