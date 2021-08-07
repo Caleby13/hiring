@@ -3,7 +3,7 @@ import { env } from '../config/env'
 import { TimeSeriesDaily } from '../types/actionHistory'
 import { SearchEndpoint } from '../types/searchEndpoint'
 import { TimeSeriesInfraday } from '../types/timeSeriesInfraday'
-import { dateStringToISOString, stringToDate } from '../utils/dateTreatment'
+import { stringToDateISO, stringToDate, formatDate } from '../utils/dateTreatment'
 
 export type TimeInterval = '1min' | '5min' | '15min' | '30min' | '60min'
 export type OutputSize = 'compacte' | 'full'
@@ -29,6 +29,15 @@ export interface PriceHistory {
 
 export interface CompareActionsPrices {
   lastPrices: PriceLastAction[]
+}
+
+export interface EarningsProjection{
+  'name': string
+  'purchasedAmount': number
+  'purchasedAt': string // data em formato ISO 8601,
+  'priceAtDate': number // preço na data de compra
+  'lastPrice': number // preço mais recente
+  'capitalGains': number // ganhos ou perdas com a ação, em reais
 }
 
 class AlphaVantageApiService {
@@ -88,7 +97,7 @@ class AlphaVantageApiService {
     const timeSeriesInfradayResponse: PriceLastAction = {
       name,
       lastPrice,
-      pricedAt: dateStringToISOString(pricedAt)
+      pricedAt: stringToDateISO(pricedAt)
     }
 
     return timeSeriesInfradayResponse
@@ -131,7 +140,7 @@ class AlphaVantageApiService {
           low,
           high,
           closing,
-          pricedAt: dateStringToISOString(pricedAt)
+          pricedAt: stringToDateISO(pricedAt)
         }
 
         prices.push(pricing)
@@ -158,7 +167,7 @@ class AlphaVantageApiService {
       const actionLastPrice: PriceLastAction = {
         name,
         lastPrice,
-        pricedAt: dateStringToISOString(lastRefreshed)
+        pricedAt: stringToDateISO(lastRefreshed)
       }
       lastPrices.push(actionLastPrice)
     }
@@ -168,6 +177,29 @@ class AlphaVantageApiService {
     }
 
     return compareActionsPrices
+  }
+
+  async projectionEarningsWithPurchase (stock_name: string,
+    purchasedAmount: number,
+    purchasedAt: string): Promise<EarningsProjection> {
+    const timeSeriesDailyAjusted = await this.timeSeriesDailyAjusted(stock_name, 'full')
+    const lastRefreshed = timeSeriesDailyAjusted['Meta Data']['3. Last Refreshed']
+    const name = timeSeriesDailyAjusted['Meta Data']['2. Symbol']
+    const lastPrice = Number(timeSeriesDailyAjusted['Time Series (Daily)'][lastRefreshed]['4. close'])
+    const priceAtDate = Number(timeSeriesDailyAjusted['Time Series (Daily)'][formatDate(purchasedAt)]['4. close'])
+    const capitalGains = (lastPrice * Number(purchasedAmount)) - (priceAtDate * Number(purchasedAmount))
+
+    const earningsProjection: EarningsProjection = {
+      name,
+      purchasedAmount,
+      purchasedAt,
+      priceAtDate,
+      lastPrice,
+      capitalGains
+
+    }
+
+    return earningsProjection
   }
 
   static connection (): AlphaVantageApiService {
