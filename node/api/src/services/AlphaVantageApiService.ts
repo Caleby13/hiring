@@ -8,7 +8,7 @@ import { dateStringToISOString, stringToDate } from '../utils/dateTreatment'
 export type TimeInterval = '1min' | '5min' | '15min' | '30min' | '60min'
 export type OutputSize = 'compacte' | 'full'
 
-export interface LastQuoteOfTheAction {
+export interface PriceLastAction {
   'name': string
   'lastPrice': number
   'pricedAt': string // data e hora no formato ISO 8601, UTC
@@ -25,6 +25,10 @@ export interface PriceHistory {
   'high': number
   'closing': number
   'pricedAt': string // data no formato ISO 8601, UTC
+}
+
+export interface CompareActionsPrices {
+  lastPrices: PriceLastAction[]
 }
 
 class AlphaVantageApiService {
@@ -58,7 +62,7 @@ class AlphaVantageApiService {
     return endpointOptions
   }
 
-  async timeSeriesInfraday (stock_name: string,
+  private async timeSeriesInfraday (stock_name: string,
     interval: TimeInterval = '1min'): Promise<TimeSeriesInfraday> {
     const { data } = await this.api.get<TimeSeriesInfraday>('', {
       params: {
@@ -75,13 +79,13 @@ class AlphaVantageApiService {
 
   async searchQuoteEndpoint (
     stock_name: string,
-    interval: TimeInterval = '1min'): Promise<LastQuoteOfTheAction> {
+    interval: TimeInterval = '1min'): Promise<PriceLastAction> {
     const timeSeriesInfraday = await this.timeSeriesInfraday(stock_name, interval)
     const name = timeSeriesInfraday['Meta Data']['2. Symbol']
     const pricedAt = timeSeriesInfraday['Meta Data']['3. Last Refreshed']
     const lastPrice = Number(timeSeriesInfraday[`Time Series (${interval})`][pricedAt]['4. close'])
 
-    const timeSeriesInfradayResponse: LastQuoteOfTheAction = {
+    const timeSeriesInfradayResponse: PriceLastAction = {
       name,
       lastPrice,
       pricedAt: dateStringToISOString(pricedAt)
@@ -90,7 +94,7 @@ class AlphaVantageApiService {
     return timeSeriesInfradayResponse
   }
 
-  async timeSeriesDailyAjusted (stock_name: string, outputsize: OutputSize = 'compacte'): Promise<TimeSeriesDaily> {
+  private async timeSeriesDailyAjusted (stock_name: string, outputsize: OutputSize = 'full'): Promise<TimeSeriesDaily> {
     const { data } = await this.api.get<TimeSeriesDaily>('', {
       params: {
         function: 'TIME_SERIES_DAILY_ADJUSTED',
@@ -107,7 +111,7 @@ class AlphaVantageApiService {
     stock_name: string,
     from: string,
     to: string,
-    outputsize: OutputSize): Promise<StockHistory> {
+    outputsize: OutputSize = 'full'): Promise<StockHistory> {
     const timeSeriesDailyAjusted = await this.timeSeriesDailyAjusted(stock_name, outputsize)
     const name = timeSeriesDailyAjusted['Meta Data']['2. Symbol']
     const historyDates = Object.keys(timeSeriesDailyAjusted['Time Series (Daily)'])
@@ -136,6 +140,34 @@ class AlphaVantageApiService {
     }
     const stockHistory: StockHistory = { name, prices }
     return stockHistory
+  }
+
+  async compareActions (
+    stock_name: string,
+    stock_name_compare: string[] = []): Promise<CompareActionsPrices> {
+    const actionsList = stock_name_compare
+    actionsList.unshift(stock_name)
+    const lastPrices: PriceLastAction[] = []
+
+    for (const action of actionsList) {
+      const timeSeriesDailyAjusted = await this.timeSeriesDailyAjusted(action, 'compacte')
+      const lastRefreshed = timeSeriesDailyAjusted['Meta Data']['3. Last Refreshed']
+      const name = timeSeriesDailyAjusted['Meta Data']['2. Symbol']
+      const lastPrice = Number(timeSeriesDailyAjusted['Time Series (Daily)'][lastRefreshed]['4. close'])
+
+      const actionLastPrice: PriceLastAction = {
+        name,
+        lastPrice,
+        pricedAt: dateStringToISOString(lastRefreshed)
+      }
+      lastPrices.push(actionLastPrice)
+    }
+
+    const compareActionsPrices: CompareActionsPrices = {
+      lastPrices: lastPrices
+    }
+
+    return compareActionsPrices
   }
 
   static connection (): AlphaVantageApiService {
