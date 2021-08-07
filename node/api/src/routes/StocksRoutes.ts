@@ -1,9 +1,8 @@
 import { Router } from 'express'
-
-import AlphaVantageController from '../controllers/AlphaVantageController'
+import EndpointOptionsController from '../controllers/EndpointOptionsController'
 
 const routes = Router()
 
-routes.get('/searchEndpoint', AlphaVantageController.showOptionsEndpoint)
+routes.get('/searchEndpoint/:keywords', EndpointOptionsController.handle)
 
 export default routes
