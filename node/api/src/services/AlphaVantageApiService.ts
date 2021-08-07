@@ -58,9 +58,8 @@ class AlphaVantageApiService {
     return endpointOptions
   }
 
-  async searchQuoteEndpoint (
-    stock_name: string,
-    interval: TimeInterval = '1min'): Promise<LastQuoteOfTheAction> {
+  async timeSeriesInfraday (stock_name: string,
+    interval: TimeInterval = '1min'): Promise<TimeSeriesInfraday> {
     const { data } = await this.api.get<TimeSeriesInfraday>('', {
       params: {
         function: 'TIME_SERIES_INTRADAY',
@@ -71,10 +70,16 @@ class AlphaVantageApiService {
       }
     })
     this.checkDemoQuote(data)
+    return data
+  }
 
-    const name = data['Meta Data']['2. Symbol']
-    const pricedAt = data['Meta Data']['3. Last Refreshed']
-    const lastPrice = Number(data[`Time Series (${interval})`][pricedAt]['4. close'])
+  async searchQuoteEndpoint (
+    stock_name: string,
+    interval: TimeInterval = '1min'): Promise<LastQuoteOfTheAction> {
+    const timeSeriesInfraday = await this.timeSeriesInfraday(stock_name, interval)
+    const name = timeSeriesInfraday['Meta Data']['2. Symbol']
+    const pricedAt = timeSeriesInfraday['Meta Data']['3. Last Refreshed']
+    const lastPrice = Number(timeSeriesInfraday[`Time Series (${interval})`][pricedAt]['4. close'])
 
     const timeSeriesInfradayResponse: LastQuoteOfTheAction = {
       name,
@@ -85,11 +90,7 @@ class AlphaVantageApiService {
     return timeSeriesInfradayResponse
   }
 
-  async actionHistorySearch (
-    stock_name: string,
-    from: string,
-    to: string,
-    outputsize: OutputSize = 'compacte'): Promise<StockHistory> {
+  async timeSeriesDailyAjusted (stock_name: string, outputsize: OutputSize = 'compacte'): Promise<TimeSeriesDaily> {
     const { data } = await this.api.get<TimeSeriesDaily>('', {
       params: {
         function: 'TIME_SERIES_DAILY_ADJUSTED',
@@ -99,10 +100,18 @@ class AlphaVantageApiService {
       }
     })
     this.checkDemoQuote(data)
+    return data
+  }
 
-    const name = data['Meta Data']['2. Symbol']
-    const historyDates = Object.keys(data['Time Series (Daily)'])
-    const timeSeries = data['Time Series (Daily)']
+  async actionHistorySearch (
+    stock_name: string,
+    from: string,
+    to: string,
+    outputsize: OutputSize): Promise<StockHistory> {
+    const timeSeriesDailyAjusted = await this.timeSeriesDailyAjusted(stock_name, outputsize)
+    const name = timeSeriesDailyAjusted['Meta Data']['2. Symbol']
+    const historyDates = Object.keys(timeSeriesDailyAjusted['Time Series (Daily)'])
+    const timeSeries = timeSeriesDailyAjusted['Time Series (Daily)']
     const prices: PriceHistory[] = []
     for (const key of historyDates) {
       if (stringToDate(key) >= stringToDate(from) &&
