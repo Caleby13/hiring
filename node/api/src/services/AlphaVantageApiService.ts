@@ -35,6 +35,14 @@ class AlphaVantageApiService {
     })
   }
 
+  private async checkDemoQuote (response: any) {
+    const alert = response.Note
+
+    if (alert) {
+      throw new Error()
+    }
+  }
+
   async stockNamesSearch (keywords: string): Promise<string[]> {
     const { data } = await this.api.get<SearchEndpoint>('', {
       params: {
@@ -44,7 +52,7 @@ class AlphaVantageApiService {
 
       }
     })
-
+    this.checkDemoQuote(data)
     const endpointOptions = data.bestMatches.map(item => item['1. symbol'])
 
     return endpointOptions
@@ -62,6 +70,7 @@ class AlphaVantageApiService {
 
       }
     })
+    this.checkDemoQuote(data)
 
     const name = data['Meta Data']['2. Symbol']
     const pricedAt = data['Meta Data']['3. Last Refreshed']
@@ -89,6 +98,7 @@ class AlphaVantageApiService {
         apikey: this.token
       }
     })
+    this.checkDemoQuote(data)
 
     const name = data['Meta Data']['2. Symbol']
     const historyDates = Object.keys(data['Time Series (Daily)'])

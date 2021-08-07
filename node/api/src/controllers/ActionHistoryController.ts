@@ -1,15 +1,19 @@
+import { Request, Response } from 'express'
 import AlphaVantageApiService from '../services/AlphaVantageApiService'
-import { HttpResponse } from '../types/http'
-import { Response, Request } from 'express'
+import { error, sucess } from '../utils/responseExpress'
 
 class ActionHistoryController {
-  async handle (req: Request, res: Response): Promise<HttpResponse> {
-    const { stock_name } = req.params
-    const { from, to } = req.query
-    const apiAlphaVantage = AlphaVantageApiService.connection()
-    const actionHistory = await apiAlphaVantage.actionHistorySearch(stock_name, String(from), String(to))
+  async handle (req: Request, res: Response): Promise<Response> {
+    try {
+      const { stock_name } = req.params
+      const { from, to } = req.query
+      const apiAlphaVantage = AlphaVantageApiService.connection()
+      const actionHistory = await apiAlphaVantage.actionHistorySearch(stock_name, String(from), String(to))
 
-    return res.json(actionHistory)
+      return sucess(actionHistory, res)
+    } catch (err) {
+      return error(err, res)
+    }
   }
 }
 
