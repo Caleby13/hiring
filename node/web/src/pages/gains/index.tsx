@@ -1,5 +1,6 @@
 import React, { useCallback, useState } from "react";
 import { useRouteMatch } from "react-router-dom";
+import { toast } from "react-toastify";
 import { Button } from "../../components/Button";
 import { ButtonRedirect } from "../../components/ButtonRedirect";
 import { DatePickers } from "../../components/DatePickers";
@@ -47,6 +48,7 @@ const Gains: React.FC = () => {
 
       setProjectionGains(data);
     } catch (err) {
+      toast.error(err || "Erro");
     } finally {
       setLoading(false);
     }

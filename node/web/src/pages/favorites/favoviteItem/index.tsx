@@ -4,7 +4,9 @@ import { Button } from "../../../components/Button";
 import { ButtonRedirect } from "../../../components/ButtonRedirect";
 import { Grid } from "../../../components/Grid";
 import { LineItem } from "../../../components/LineItem";
+import { Loading } from "../../../components/Loading";
 import api from "../../../services/api";
+import { toast } from "react-toastify";
 
 interface PriceLastAction {
   name: string;
@@ -19,17 +21,27 @@ interface ActionNameProps {
 
 export const FavoriteItem = ({ actionName, handleDelete }: ActionNameProps) => {
   const [stock, setStock] = useState<PriceLastAction>({} as PriceLastAction);
+  const [loading, setLoading] = useState(false);
 
   const actionsSearch = useCallback(async () => {
-    const { data } = await api.get(`/stocks/${actionName}/quote`);
-    setStock(data);
+    try {
+      setLoading(true);
+      const { data } = await api.get(`/stocks/${actionName}/quote`);
+      setStock(data);
+    } catch (err) {
+      toast.error(err || "Erro");
+    } finally {
+      setLoading(false);
+    }
   }, [actionName]);
 
   useEffect(() => {
     actionsSearch();
   }, [actionsSearch]);
 
-  console.log(stock);
+  if (loading) {
+    return <Loading />;
+  }
 
   return (
     <div>

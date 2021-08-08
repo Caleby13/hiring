@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { useCallback } from "react";
+import React, { useCallback, useEffect, useState } from "react";
+import { toast } from "react-toastify";
 import { ButtonRedirect } from "../../components/ButtonRedirect";
 import { Grid } from "../../components/Grid";
 import { FavoriteItem } from "./favoviteItem";
@@ -19,15 +19,20 @@ const Favorites: React.FC = () => {
 
   const handleDelete = useCallback(
     (action: string) => {
-      const savedFavorites = localStorage.getItem(FAVORITEKEY);
-      if (savedFavorites) {
-        const favorites: string[] = JSON.parse(savedFavorites);
-        const index = favorites.indexOf(action);
-        if (index > -1) {
-          favorites.splice(index, 1);
-          localStorage.setItem(FAVORITEKEY, JSON.stringify(favorites));
-          searchFavorites();
+      try {
+        const savedFavorites = localStorage.getItem(FAVORITEKEY);
+        if (savedFavorites) {
+          const favorites: string[] = JSON.parse(savedFavorites);
+          const index = favorites.indexOf(action);
+          if (index > -1) {
+            favorites.splice(index, 1);
+            localStorage.setItem(FAVORITEKEY, JSON.stringify(favorites));
+            searchFavorites();
+            toast.success("Excluido com sucesso");
+          }
         }
+      } catch (err) {
+        toast.error(err || "Erro");
       }
     },
     [searchFavorites]

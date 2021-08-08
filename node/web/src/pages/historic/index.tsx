@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useCallback } from "react";
 import { useRouteMatch } from "react-router-dom";
+import { toast } from "react-toastify";
 import { Button } from "../../components/Button";
 import { ButtonRedirect } from "../../components/ButtonRedirect";
 import { DatePickers } from "../../components/DatePickers";
@@ -47,8 +48,8 @@ const Historic: React.FC = () => {
         }
       );
       setPriceHistory(data.prices);
-      console.log(data.prices);
     } catch (err) {
+      toast.error(err || "Erro");
     } finally {
       setLoading(false);
     }

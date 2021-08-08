@@ -1,4 +1,5 @@
 import React, { useCallback, useEffect, useState } from "react";
+import { toast } from "react-toastify";
 import { Button } from "../../components/Button";
 import { ButtonRedirect } from "../../components/ButtonRedirect";
 import { Divider } from "../../components/Divider";
@@ -18,11 +19,17 @@ const Home: React.FC = () => {
 
   const addFavorite = useCallback(
     (item: string) => {
-      const exist = favorites.find((prevFavorites) => prevFavorites === item);
-      if (exist) {
-        return;
+      try {
+        const exist = favorites.find((prevFavorites) => prevFavorites === item);
+        if (exist) {
+          toast.info("Está ação já está nos favoritos");
+          return;
+        }
+        setFavorites((prev) => [item, ...prev]);
+        toast.success("Adicionado com sucesso");
+      } catch (err) {
+        toast.error(err || "Erro");
       }
-      setFavorites((prev) => [item, ...prev]);
     },
     [favorites]
   );
@@ -33,6 +40,7 @@ const Home: React.FC = () => {
       const { data } = await api.get(`/stocks/searchEndpoint/${keywords}`);
       setRows(data);
     } catch (err) {
+      toast.error(err || "Erro");
     } finally {
       setLoading(false);
     }
