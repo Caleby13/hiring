@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { ButtonRedirect } from "../../components/ButtonRedirect";
 import { Grid } from "../../components/Grid";
+import { Title } from "../../components/Title/indes";
 import { FavoriteItem } from "./favoviteItem";
 
 const Favorites: React.FC = () => {
@@ -49,9 +50,7 @@ const Favorites: React.FC = () => {
           <ButtonRedirect to="/">Ir para tela anterior</ButtonRedirect>
         </Grid>
       </Grid>
-      <div style={{ textAlign: "center" }}>
-        <h1>ÚLTIMA COTAÇÃO</h1>
-      </div>
+      <Title>ÚLTIMA COTAÇÃO</Title>
       <div>
         {favorites.map((item) => (
           <FavoriteItem handleDelete={handleDelete} actionName={item} />

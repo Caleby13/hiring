@@ -9,6 +9,7 @@ import { LineItem } from "../../components/LineItem";
 import { Loading } from "../../components/Loading";
 import { TextField } from "../../components/TextField";
 import api from "../../services/api";
+import { formatPrice } from "../../utils";
 
 interface GainsProps {
   actionName: string;
@@ -87,20 +88,25 @@ const Gains: React.FC = () => {
         <Grid type={"item"} xs={4}>
           <Button onClick={searchEarningsProjection}>Calcular ganhos</Button>
         </Grid>{" "}
+      </Grid>
+
+      <Grid type={"container"}>
         <LineItem xs={4}>Nome : {projectionGains.name}</LineItem>
         <LineItem xs={4}>
           Data da cotação atual : {projectionGains.purchasedAt}
         </LineItem>
         <LineItem xs={4}>
-          Preço na data de compra : {projectionGains.priceAtDate}
+          Preço na data de compra : {formatPrice(projectionGains.priceAtDate)}
         </LineItem>
         <LineItem xs={4}>
-          Preço mais recente : {projectionGains.lastPrice}
+          Preço mais recente : {formatPrice(projectionGains.lastPrice)}
         </LineItem>
         <LineItem xs={4}>
           Quantidade da compra : {projectionGains.purchasedAmount}
         </LineItem>
-        <LineItem xs={4}>Ganhos : {projectionGains.capitalGains}</LineItem>
+        <LineItem xs={4}>
+          Ganhos : {formatPrice(projectionGains.capitalGains)}
+        </LineItem>
       </Grid>
     </>
   );

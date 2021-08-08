@@ -9,7 +9,9 @@ import { Divider } from "../../components/Divider";
 import { Grid } from "../../components/Grid";
 import { LineItem } from "../../components/LineItem";
 import { Loading } from "../../components/Loading";
+import { Title } from "../../components/Title/indes";
 import api from "../../services/api";
+import { formatDateTime, formatPrice } from "../../utils";
 
 interface HistoricProps {
   actionName: string;
@@ -87,14 +89,15 @@ const Historic: React.FC = () => {
           <Button onClick={searchHistory}>Buscar Registros</Button>
         </Grid>
       </Grid>
+      <Title>{params.actionName}</Title>
       {priceHistory.map((item) => (
         <>
           <Grid type={"container"}>
-            <LineItem xs={2}>{item.opening}</LineItem>
-            <LineItem xs={2}>{item.closing}</LineItem>
-            <LineItem xs={2}>{item.low}</LineItem>
-            <LineItem xs={2}>{item.high}</LineItem>
-            <LineItem xs={2}>{item.pricedAt}</LineItem>
+            <LineItem xs={2}>{formatDateTime(item.pricedAt)}</LineItem>
+            <LineItem xs={2}>Open: {formatPrice(item.opening)}</LineItem>
+            <LineItem xs={2}>Closing: {formatPrice(item.closing)}</LineItem>
+            <LineItem xs={2}>Low: {formatPrice(item.low)}</LineItem>
+            <LineItem xs={2}>High: {formatPrice(item.high)}</LineItem>
           </Grid>
           <Divider />
         </>

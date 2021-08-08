@@ -7,6 +7,7 @@ import { LineItem } from "../../../components/LineItem";
 import { Loading } from "../../../components/Loading";
 import api from "../../../services/api";
 import { toast } from "react-toastify";
+import { formatDateTime, formatPrice } from "../../../utils";
 
 interface PriceLastAction {
   name: string;
@@ -48,10 +49,14 @@ export const FavoriteItem = ({ actionName, handleDelete }: ActionNameProps) => {
       <Grid type={"container"}>
         <LineItem xs={2}>{actionName}</LineItem>
         <LineItem xs={3}>
-          {stock.lastPrice ? `Preço: ${stock.lastPrice}` : "Buscando..."}
+          {stock.lastPrice
+            ? `Preço: ${formatPrice(stock.lastPrice)}`
+            : "Buscando..."}
         </LineItem>
         <LineItem xs={3}>
-          {stock.pricedAt ? `Data: ${stock.pricedAt}` : "Buscando..."}
+          {stock.pricedAt
+            ? `Data: ${formatDateTime(stock.pricedAt)}`
+            : "Buscando..."}
         </LineItem>
         <Grid type={"item"} xs={1}>
           <ButtonRedirect
