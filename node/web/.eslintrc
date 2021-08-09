@@ -1,0 +1,40 @@
+{
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "ecmaVersion": 6,
+    "sourceType": "module",
+    "ecmaFeatures": {
+      "modules": true
+    }
+  },
+  "plugins": ["eslint-plugin-import-helpers", "react-hooks"],
+  "rules": {
+    "react-hooks/rules-of-hooks": "error",
+    "react-hooks/exhaustive-deps": "warn",
+    "import-helpers/order-imports": [
+      "warn",
+      {
+        "newlinesBetween": "always",
+        "groups": [
+          "module",
+          "/^assets/",
+          "/^components/",
+          "/^config/",
+          "/^contexts/",
+          "/^hooks/",
+          "/^modulos/",
+          "/^pages/",
+          "/^providers/",
+          "/^routes/",
+          "/^services/",
+          "/^styles/",
+          "/^system/",
+          "/^types/",
+          "/^util/",
+          ["parent", "sibling", "index"]
+        ],
+        "alphabetize": {"order": "asc", "ignoreCase": true}
+      }
+    ]
+  }
+}
