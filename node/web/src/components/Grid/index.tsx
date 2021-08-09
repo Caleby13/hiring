@@ -26,12 +26,7 @@ export const Grid = ({
 }: IGrid) => {
   if (type === "container") {
     return (
-      <GridMaterial
-        container
-        justifyContent={justifyContent}
-        spacing={spacing}
-        xs={xs}
-      >
+      <GridMaterial container justifyContent={justifyContent} spacing={spacing}>
         {children}
       </GridMaterial>
     );
@@ -39,23 +34,13 @@ export const Grid = ({
 
   if (type === "item") {
     return (
-      <GridMaterial
-        item
-        justifyContent={justifyContent}
-        spacing={spacing}
-        xs={xs}
-      >
+      <GridMaterial item xs={xs}>
         {children}
       </GridMaterial>
     );
   }
   return (
-    <GridMaterial
-      item
-      justifyContent={justifyContent}
-      spacing={spacing}
-      xs={xs}
-    >
+    <GridMaterial item xs={xs}>
       {children}
     </GridMaterial>
   );
