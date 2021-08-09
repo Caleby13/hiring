@@ -37,6 +37,10 @@ const Home: React.FC = () => {
   const searchEndpoint = useCallback(async () => {
     try {
       setLoading(true);
+      if (!keywords) {
+        toast.error("Informe o nome da ação que deseja buscar");
+        return;
+      }
       const { data } = await api.get(`/stocks/searchEndpoint/${keywords}`);
       setRows(data);
     } catch (err) {
