@@ -38,4 +38,16 @@ describe('AlphaVantage Api Service', () => {
     expect(compareActions.lastPrices[0].name).toBe('IBM')
     expect(compareActions.lastPrices[1].name).toBe('VALE')
   })
+
+  test('shold return the earnings projection of a share (service projectionEarningsWithPurchase)', async () => {
+    const sut = makeSut()
+    const projectionEarningsWithPurchase: EarningsProjection = await sut.projectionEarningsWithPurchase('IBM', 5, '2021-08-02')
+    expect(projectionEarningsWithPurchase).toBeTruthy()
+    expect(projectionEarningsWithPurchase.name).toBe('IBM')
+    expect(projectionEarningsWithPurchase.purchasedAmount).toBeTruthy()
+    expect(projectionEarningsWithPurchase.purchasedAt).toBeTruthy()
+    expect(projectionEarningsWithPurchase.priceAtDate).toBeTruthy()
+    expect(projectionEarningsWithPurchase.lastPrice).toBeTruthy()
+    expect(projectionEarningsWithPurchase.capitalGains).toBeTruthy()
+  })
 })
