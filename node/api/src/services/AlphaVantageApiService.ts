@@ -49,10 +49,10 @@ class AlphaVantageApiService {
   }
 
   private async checkDemoQuote (response: any) {
-    const alert = response.Note
+    const alert = response.Note || response.Information
 
     if (alert) {
-      throw new Error()
+      throw new Error(alert)
     }
   }
 
@@ -179,28 +179,28 @@ class AlphaVantageApiService {
     return compareActionsPrices
   }
 
+  private readonly searchQuoteDate = (quoteDates: string[], purchasedAt: string) => {
+    for (const key of quoteDates) {
+      const date = new Date(key)
+      const purchaseSharePriceDate = date <= new Date(purchasedAt)
+      if (purchaseSharePriceDate) {
+        const correctDate = formatDate(date)
+        return correctDate
+      }
+      continue
+    }
+    return formatDate(purchasedAt)
+  }
+
   async projectionEarningsWithPurchase (stock_name: string,
     purchasedAmount: number,
     purchasedAt: string): Promise<EarningsProjection> {
-    const searchQuoteDate = (quoteDates: string[]) => {
-      for (const key of quoteDates) {
-        const date = new Date(key)
-        const purchaseSharePriceDate = date <= new Date(purchasedAt)
-        if (purchaseSharePriceDate) {
-          const correctDate = formatDate(date)
-          return correctDate
-        }
-        continue
-      }
-      return formatDate(purchasedAt)
-    }
-
     const timeSeriesDailyAjusted = await this.timeSeriesDailyAjusted(stock_name, 'full')
     const lastRefreshed = timeSeriesDailyAjusted['Meta Data']['3. Last Refreshed']
     const name = timeSeriesDailyAjusted['Meta Data']['2. Symbol']
     const lastPrice = Number(timeSeriesDailyAjusted['Time Series (Daily)'][lastRefreshed]['4. close'])
     const quoteDates = Object.keys(timeSeriesDailyAjusted['Time Series (Daily)'])
-    const dateOfLastQuoteBeforePurchase = searchQuoteDate(quoteDates)
+    const dateOfLastQuoteBeforePurchase = this.searchQuoteDate(quoteDates, purchasedAt)
     const priceAtDate = Number(timeSeriesDailyAjusted['Time Series (Daily)'][dateOfLastQuoteBeforePurchase]['4. close'])
     const capitalGains = (lastPrice * Number(purchasedAmount)) - (priceAtDate * Number(purchasedAmount))
 

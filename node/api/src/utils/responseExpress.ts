@@ -4,8 +4,8 @@ export const sucess = (data: any, res: Response) => (
   res.status(200).json(data)
 )
 
-export const badRequest = (error: Error, res: Response) => (
-  res.status(400).json(error)
+export const badRequest = (param: string, res: Response) => (
+  res.status(400).json({ message: { error: `Missing param ${param}` } })
 )
 
 export const error = (res: Response) => (
