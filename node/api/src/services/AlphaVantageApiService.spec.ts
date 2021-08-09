@@ -29,4 +29,13 @@ describe('AlphaVantage Api Service', () => {
     expect(actionHistorySearch.name).toBeTruthy()
     expect(actionHistorySearch.prices).toBeTruthy()
   })
+
+  test('Shold return 2 shares for comparison (service compareActions)', async () => {
+    const sut = makeSut()
+    const compareActions: CompareActionsPrices = await sut.compareActions('IBM', ['VALE'])
+    expect(compareActions).toBeTruthy()
+    expect(compareActions.lastPrices).toBeTruthy()
+    expect(compareActions.lastPrices[0].name).toBe('IBM')
+    expect(compareActions.lastPrices[1].name).toBe('VALE')
+  })
 })
