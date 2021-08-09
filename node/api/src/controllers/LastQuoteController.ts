@@ -11,7 +11,7 @@ class LastquoteController {
       const quoteOfTheAction = await apiAlphaVantage.searchQuoteEndpoint(stock_name)
       return sucess(quoteOfTheAction, res)
     } catch (err) {
-      return error(err, res)
+      return error(res)
     }
   }
 }

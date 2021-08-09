@@ -13,7 +13,7 @@ class CompareActionsPricesController {
 
       return sucess(lastActionPriceCompare, res)
     } catch (err) {
-      return error(err, res)
+      return error(res)
     }
   }
 }

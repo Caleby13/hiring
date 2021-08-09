@@ -11,7 +11,7 @@ class EndpointOptionsController {
       const endpoitSearch = await apiAlphaVantage.stockNamesSearch(keywords)
       return sucess(endpoitSearch, res)
     } catch (err) {
-      return error(err, res)
+      return error(res)
     }
   }
 }

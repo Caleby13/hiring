@@ -8,6 +8,6 @@ export const badRequest = (error: Error, res: Response) => (
   res.status(400).json(error)
 )
 
-export const error = (error: Error, res: Response) => (
-  res.status(500).json(error)
+export const error = (res: Response) => (
+  res.status(500).json({ message: { error: 'Internal server erro' } })
 )

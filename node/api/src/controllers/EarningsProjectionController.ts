@@ -12,7 +12,7 @@ class EarningsProjectionController {
         .projectionEarningsWithPurchase(stock_name, Number(purchasedAmount), String(purchasedAt))
       return sucess(earningsProjection, res)
     } catch (err) {
-      return error(err, res)
+      return error(res)
     }
   }
 }

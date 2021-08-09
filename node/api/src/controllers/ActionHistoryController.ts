@@ -12,7 +12,7 @@ class ActionHistoryController {
 
       return sucess(actionHistory, res)
     } catch (err) {
-      return error(err, res)
+      return error(res)
     }
   }
 }
