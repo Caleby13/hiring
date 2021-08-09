@@ -182,11 +182,26 @@ class AlphaVantageApiService {
   async projectionEarningsWithPurchase (stock_name: string,
     purchasedAmount: number,
     purchasedAt: string): Promise<EarningsProjection> {
+    const searchQuoteDate = (quoteDates: string[]) => {
+      for (const key of quoteDates) {
+        const date = new Date(key)
+        const purchaseSharePriceDate = date <= new Date(purchasedAt)
+        if (purchaseSharePriceDate) {
+          const correctDate = formatDate(date)
+          return correctDate
+        }
+        continue
+      }
+      return formatDate(purchasedAt)
+    }
+
     const timeSeriesDailyAjusted = await this.timeSeriesDailyAjusted(stock_name, 'full')
     const lastRefreshed = timeSeriesDailyAjusted['Meta Data']['3. Last Refreshed']
     const name = timeSeriesDailyAjusted['Meta Data']['2. Symbol']
     const lastPrice = Number(timeSeriesDailyAjusted['Time Series (Daily)'][lastRefreshed]['4. close'])
-    const priceAtDate = Number(timeSeriesDailyAjusted['Time Series (Daily)'][formatDate(purchasedAt)]['4. close'])
+    const quoteDates = Object.keys(timeSeriesDailyAjusted['Time Series (Daily)'])
+    const dateOfLastQuoteBeforePurchase = searchQuoteDate(quoteDates)
+    const priceAtDate = Number(timeSeriesDailyAjusted['Time Series (Daily)'][dateOfLastQuoteBeforePurchase]['4. close'])
     const capitalGains = (lastPrice * Number(purchasedAmount)) - (priceAtDate * Number(purchasedAmount))
 
     const earningsProjection: EarningsProjection = {

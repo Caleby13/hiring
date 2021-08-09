@@ -1,3 +1,4 @@
+import { parseISO, format, addDays } from 'date-fns'
 
 export const stringToDateISO = (dateString: string): string => {
   const dateMethod = new Date(dateString)
@@ -10,17 +11,20 @@ export const stringToDate = (dateString: string): Date => {
   return date
 }
 
-export const formatDate = (dateString: string) => {
-  const format = (data: number) => {
-    if (data < 10) {
-      return `0${data}`
-    }
-    return data
-  }
-  const newDate = new Date(dateString)
-  const dia = format(newDate.getDate())
-  const mes = format(newDate.getMonth() + 1)
-  const ano = format(newDate.getFullYear())
+export const formatDate = (value: string | Date) => {
+  let VALUE: Date | null = null
 
-  return `${ano}-${mes}-${dia}`
+  if (value instanceof Date) {
+    VALUE = value
+  }
+
+  if (typeof value === 'string') {
+    VALUE = parseISO(value)
+  }
+
+  if (VALUE instanceof Date) {
+    return format(addDays(VALUE, 1), 'yyyy-MM-dd')
+  }
+
+  return ''
 }
