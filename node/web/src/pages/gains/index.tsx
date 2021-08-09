@@ -95,41 +95,41 @@ const Gains: React.FC = () => {
         </Grid>{" "}
       </Grid>
 
-      <Grid type={"container"}>
-        <LineItem xs={4}>
-          Nome : {projectionGains.name ? projectionGains.name : ""}
-        </LineItem>
-        <LineItem xs={4}>
-          Data da cotação atual :{" "}
-          {projectionGains.purchasedAt
-            ? formatDate(projectionGains.purchasedAt)
-            : ""}
-        </LineItem>
-        <LineItem xs={4}>
-          Preço na data de compra :{" "}
-          {projectionGains.priceAtDate
-            ? formatPrice(projectionGains.priceAtDate)
-            : ""}
-        </LineItem>
-        <LineItem xs={4}>
-          Preço mais recente :{" "}
-          {projectionGains.lastPrice
-            ? formatPrice(projectionGains.lastPrice)
-            : ""}
-        </LineItem>
-        <LineItem xs={4}>
-          Quantidade da compra :{" "}
-          {projectionGains.purchasedAmount
-            ? projectionGains.purchasedAmount
-            : ""}
-        </LineItem>
-        <LineItem xs={4}>
-          Ganhos :{" "}
-          {projectionGains.capitalGains
-            ? formatPrice(projectionGains.capitalGains)
-            : ""}
-        </LineItem>
-      </Grid>
+      {projectionGains.name && (
+        <Grid type={"container"}>
+          <LineItem xs={4}>Nome : {projectionGains.name}</LineItem>
+          <LineItem xs={4}>
+            Data da cotação atual :{" "}
+            {projectionGains.purchasedAt
+              ? formatDate(projectionGains.purchasedAt)
+              : ""}
+          </LineItem>
+          <LineItem xs={4}>
+            Preço na data de compra :{" "}
+            {projectionGains.priceAtDate
+              ? formatPrice(projectionGains.priceAtDate)
+              : ""}
+          </LineItem>
+          <LineItem xs={4}>
+            Preço mais recente :{" "}
+            {projectionGains.lastPrice
+              ? formatPrice(projectionGains.lastPrice)
+              : ""}
+          </LineItem>
+          <LineItem xs={4}>
+            Quantidade da compra :{" "}
+            {projectionGains.purchasedAmount
+              ? projectionGains.purchasedAmount
+              : ""}
+          </LineItem>
+          <LineItem xs={4}>
+            Ganhos :{" "}
+            {projectionGains.capitalGains
+              ? formatPrice(projectionGains.capitalGains)
+              : ""}
+          </LineItem>
+        </Grid>
+      )}
     </>
   );
 };
