@@ -12,4 +12,13 @@ describe('AlphaVantage Api Service', () => {
     expect(endpointNames).toBeTruthy()
     expect(endpointNames.length > 0).toBe(true)
   })
+
+  test('Should return the most recent quote for the stock (service searchQuoteEndpoint)', async () => {
+    const sut = makeSut()
+    const searchQuoteEndpoint: PriceLastAction = await sut.searchQuoteEndpoint('IBM')
+    expect(searchQuoteEndpoint).toBeTruthy()
+    expect(searchQuoteEndpoint.name).toBeTruthy()
+    expect(searchQuoteEndpoint.lastPrice).toBeTruthy()
+    expect(searchQuoteEndpoint.pricedAt).toBeTruthy()
+  })
 })
