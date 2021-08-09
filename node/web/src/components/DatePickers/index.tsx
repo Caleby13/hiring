@@ -1,13 +1,13 @@
-import TextField from "@material-ui/core/TextField";
-import React, { ChangeEventHandler } from "react";
+import TextField from '@material-ui/core/TextField'
+import React, {ChangeEventHandler} from 'react'
 
 interface IDataPickers {
-  label: string;
-  value: string;
-  onChange: ChangeEventHandler<HTMLTextAreaElement | HTMLInputElement>;
+  label: string
+  value: string
+  onChange: ChangeEventHandler<HTMLTextAreaElement | HTMLInputElement>
 }
 
-export const DatePickers = ({ label, onChange, value }: IDataPickers) => {
+export const DatePickers = ({label, onChange, value}: IDataPickers) => {
   return (
     <form noValidate>
       <TextField
@@ -18,9 +18,9 @@ export const DatePickers = ({ label, onChange, value }: IDataPickers) => {
         fullWidth
         onChange={onChange}
         InputLabelProps={{
-          shrink: true,
+          shrink: true
         }}
       />
     </form>
-  );
-};
+  )
+}

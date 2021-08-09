@@ -1,98 +1,100 @@
-import React, { useCallback, useEffect, useState } from "react";
-import { toast } from "react-toastify";
-import { Button } from "../../components/Button";
-import { ButtonRedirect } from "../../components/ButtonRedirect";
-import { Divider } from "../../components/Divider";
-import { Grid } from "../../components/Grid";
-import { LineItem } from "../../components/LineItem";
-import { Loading } from "../../components/Loading";
-import { TextField } from "../../components/TextField";
-import api from "../../services/api";
+import React, {useCallback, useEffect, useState} from 'react'
+import {toast} from 'react-toastify'
+import {Button} from '../../components/Button'
+import {ButtonRedirect} from '../../components/ButtonRedirect'
+import {Divider} from '../../components/Divider'
+import {Grid} from '../../components/Grid'
+import {LineItem} from '../../components/LineItem'
+import {Loading} from '../../components/Loading'
+import {TextField} from '../../components/TextField'
+import api from '../../services/api'
 
 const Home: React.FC = () => {
-  const FAVORITEKEY = "@favorites";
+  const FAVORITEKEY = '@favorites'
 
-  const [keywords, setKeywords] = useState("");
-  const [rows, setRows] = useState<string[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [favorites, setFavorites] = useState<string[]>([]);
+  const [keywords, setKeywords] = useState('')
+  const [rows, setRows] = useState<string[]>([])
+  const [loading, setLoading] = useState(false)
+  const [favorites, setFavorites] = useState<string[]>([])
 
   const addFavorite = useCallback(
     (item: string) => {
       try {
-        const exist = favorites.find((prevFavorites) => prevFavorites === item);
+        const exist = favorites.find((prevFavorites) => prevFavorites === item)
         if (exist) {
-          toast.info("Está ação já está nos favoritos");
-          return;
+          toast.info('Está ação já está nos favoritos')
+          return
         }
-        setFavorites((prev) => [item, ...prev]);
-        toast.success("Adicionado com sucesso");
+        setFavorites((prev) => [item, ...prev])
+        toast.success('Adicionado com sucesso')
       } catch (err) {
-        toast.error(err || "Erro");
+        const message = err?.response?.data?.error?.message || 'Erro'
+        toast.error(message)
       }
     },
     [favorites]
-  );
+  )
 
   const searchEndpoint = useCallback(async () => {
     try {
-      setLoading(true);
+      setLoading(true)
       if (!keywords) {
-        toast.error("Informe o nome da ação que deseja buscar");
-        return;
+        toast.error('Informe o nome da ação que deseja buscar')
+        return
       }
-      const { data } = await api.get(`/stocks/searchEndpoint/${keywords}`);
-      setRows(data);
+      const {data} = await api.get(`/stocks/searchEndpoint/${keywords}`)
+      setRows(data)
     } catch (err) {
-      toast.error(err || "Erro");
+      const message = err?.response?.data?.error?.message || 'Erro'
+      toast.error(message)
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
-  }, [keywords]);
+  }, [keywords])
 
   useEffect(() => {
-    const persistFavorite = localStorage.getItem(FAVORITEKEY);
+    const persistFavorite = localStorage.getItem(FAVORITEKEY)
     if (!persistFavorite) {
-      return;
+      return
     }
-    setFavorites(JSON.parse(persistFavorite));
-  }, []);
+    setFavorites(JSON.parse(persistFavorite))
+  }, [])
 
   useEffect(() => {
-    localStorage.setItem(FAVORITEKEY, JSON.stringify(favorites));
-  }, [favorites]);
+    localStorage.setItem(FAVORITEKEY, JSON.stringify(favorites))
+  }, [favorites])
 
   if (loading) {
-    return <Loading />;
+    return <Loading />
   }
 
   return (
     <>
-      <Grid type={"container"} spacing={1}>
+      <Grid type={'container'} spacing={1}>
         <TextField
           xs={8}
-          placeHolder={"Insira o nome da ação desejada. Ex: PETR4.SA, VALE5.SA"}
-          label={"Nome da ação"}
+          placeHolder={'Insira o nome da ação desejada. Ex: PETR4.SA, VALE5.SA'}
+          label={'Nome da ação'}
           onChange={(e) => setKeywords(e.target.value)}
         />
-        <Grid type={"item"} xs={2}>
+        <Grid type={'item'} xs={2}>
           <Button onClick={searchEndpoint}>Buscar</Button>
         </Grid>
-        <Grid type={"item"} xs={2}>
+        <Grid type={'item'} xs={2}>
           <ButtonRedirect to="/favorites">Favoritos</ButtonRedirect>
         </Grid>
       </Grid>
       {rows.map((item) => (
         <>
-          <Grid type={"container"} xs={12}>
+          <Grid type={'container'} xs={12}>
             <LineItem xs={3}>{item}</LineItem>
-            <Grid type={"item"} xs={3}>
+            <Grid type={'item'} xs={3}>
               <Button
                 onClick={() => {
-                  addFavorite(item);
+                  addFavorite(item)
                 }}
-                size={"small"}
-                variant={"outlined"}
+                size={'small'}
+                variant={'outlined'}
               >
                 Add Favoritos
               </Button>
@@ -102,7 +104,7 @@ const Home: React.FC = () => {
         </>
       ))}
     </>
-  );
-};
+  )
+}
 
-export default Home;
+export default Home

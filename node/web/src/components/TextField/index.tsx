@@ -1,12 +1,12 @@
-import { Grid } from "../Grid";
-import { TextField as TextFieldMaterial } from "@material-ui/core";
-import { ChangeEventHandler } from "react";
+import {Grid} from '../Grid'
+import {TextField as TextFieldMaterial} from '@material-ui/core'
+import {ChangeEventHandler} from 'react'
 
 interface ITextField {
-  placeHolder?: string;
-  defaultValue?: string;
-  type?: string;
-  onChange: ChangeEventHandler<HTMLTextAreaElement | HTMLInputElement>;
+  placeHolder?: string
+  defaultValue?: string
+  type?: string
+  onChange: ChangeEventHandler<HTMLTextAreaElement | HTMLInputElement>
   xs:
     | boolean
     | 2
@@ -19,23 +19,23 @@ interface ITextField {
     | 8
     | 9
     | 10
-    | "auto"
+    | 'auto'
     | 11
     | 12
-    | undefined;
-  label?: string;
+    | undefined
+  label?: string
 }
 
 export const TextField = ({
   placeHolder,
   defaultValue,
-  type = "text",
+  type = 'text',
   onChange,
   xs,
-  label = "",
+  label = ''
 }: ITextField) => {
   return (
-    <Grid type={"item"} xs={xs}>
+    <Grid type={'item'} xs={xs}>
       <TextFieldMaterial
         label={label}
         fullWidth
@@ -45,5 +45,5 @@ export const TextField = ({
         onChange={onChange}
       />
     </Grid>
-  );
-};
+  )
+}

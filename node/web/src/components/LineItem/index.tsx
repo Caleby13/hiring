@@ -1,8 +1,8 @@
-import React, { ReactNode } from "react";
-import { Grid } from "../Grid";
+import React, {ReactNode} from 'react'
+import {Grid} from '../Grid'
 
 interface ILineItem {
-  children: ReactNode;
+  children: ReactNode
   xs:
     | boolean
     | 2
@@ -15,18 +15,18 @@ interface ILineItem {
     | 8
     | 9
     | 10
-    | "auto"
+    | 'auto'
     | 11
     | 12
-    | undefined;
+    | undefined
 }
 
-export const LineItem = ({ children, xs }: ILineItem) => {
+export const LineItem = ({children, xs}: ILineItem) => {
   return (
-    <Grid type={"item"} xs={xs}>
+    <Grid type={'item'} xs={xs}>
       <div>
         <h3>{children}</h3>
       </div>
     </Grid>
-  );
-};
+  )
+}

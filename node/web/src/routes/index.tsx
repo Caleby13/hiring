@@ -1,10 +1,10 @@
-import React from "react";
-import { Switch, Route } from "react-router-dom";
+import React from 'react'
+import {Switch, Route} from 'react-router-dom'
 
-import Favorites from "../pages/favorites";
-import Home from "../pages/home";
-import Gains from "../pages/gains";
-import Historic from "../pages/historic";
+import Favorites from '../pages/favorites'
+import Home from '../pages/home'
+import Gains from '../pages/gains'
+import Historic from '../pages/historic'
 
 const Routes: React.FC = () => (
   <Switch>
@@ -13,6 +13,6 @@ const Routes: React.FC = () => (
     <Route path="/gains/:actionName+" component={Gains} />
     <Route path="/historic/:actionName+" component={Historic} />
   </Switch>
-);
+)
 
-export default Routes;
+export default Routes
