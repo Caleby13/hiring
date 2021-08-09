@@ -1,5 +1,4 @@
-import React, { useState } from "react";
-import { useCallback } from "react";
+import React, { useCallback, useState } from "react";
 import { useRouteMatch } from "react-router-dom";
 import { toast } from "react-toastify";
 import { Button } from "../../components/Button";
@@ -11,7 +10,8 @@ import { LineItem } from "../../components/LineItem";
 import { Loading } from "../../components/Loading";
 import { Title } from "../../components/Title/indes";
 import api from "../../services/api";
-import { formatDateTime, formatPrice } from "../../utils";
+import { formatDate, formatPrice } from "../../utils";
+import { format } from "date-fns";
 
 interface HistoricProps {
   actionName: string;
@@ -31,9 +31,11 @@ interface PriceHistory {
 }
 
 const Historic: React.FC = () => {
+  const currentDate = format(new Date(), "yyyy-MM-dd");
+
   const { params } = useRouteMatch<HistoricProps>();
-  const [toDate, setToDate] = useState("");
-  const [fromDate, setFromDate] = useState("");
+  const [toDate, setToDate] = useState(currentDate);
+  const [fromDate, setFromDate] = useState(currentDate);
   const [priceHistory, setPriceHistory] = useState<PriceHistory[]>([]);
   const [loading, setLoading] = useState(false);
 
@@ -58,7 +60,7 @@ const Historic: React.FC = () => {
   }, [params.actionName, toDate, fromDate]);
 
   if (loading) {
-    <Loading />;
+    return <Loading />;
   }
 
   return (
@@ -72,6 +74,7 @@ const Historic: React.FC = () => {
         <Grid type={"item"} xs={2}>
           <DatePickers
             label="Data Final"
+            value={fromDate}
             onChange={(e) => {
               setFromDate(e.target.value);
             }}
@@ -80,6 +83,7 @@ const Historic: React.FC = () => {
         <Grid type={"item"} xs={2}>
           <DatePickers
             label="Data Final"
+            value={toDate}
             onChange={(e) => {
               setToDate(e.target.value);
             }}
@@ -93,7 +97,7 @@ const Historic: React.FC = () => {
       {priceHistory.map((item) => (
         <>
           <Grid type={"container"}>
-            <LineItem xs={2}>{formatDateTime(item.pricedAt)}</LineItem>
+            <LineItem xs={2}>{formatDate(item.pricedAt)}</LineItem>
             <LineItem xs={2}>Open: {formatPrice(item.opening)}</LineItem>
             <LineItem xs={2}>Closing: {formatPrice(item.closing)}</LineItem>
             <LineItem xs={2}>Low: {formatPrice(item.low)}</LineItem>

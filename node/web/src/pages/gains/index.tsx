@@ -9,7 +9,8 @@ import { LineItem } from "../../components/LineItem";
 import { Loading } from "../../components/Loading";
 import { TextField } from "../../components/TextField";
 import api from "../../services/api";
-import { formatPrice } from "../../utils";
+import { formatDate, formatPrice } from "../../utils";
+import { format } from "date-fns";
 
 interface GainsProps {
   actionName: string;
@@ -27,11 +28,14 @@ interface EarningsProjection {
 const Gains: React.FC = () => {
   const { params } = useRouteMatch<GainsProps>();
 
+  const currentDate = format(new Date(), "yyyy-MM-dd");
+
   const [purchasedAmount, setPurchasedAmount] = useState<string>("0");
-  const [purchasedAt, setPurchasedAt] = useState<string>("");
+  const [purchasedAt, setPurchasedAt] = useState<string>(currentDate);
   const [projectionGains, setProjectionGains] = useState<EarningsProjection>(
     {} as EarningsProjection
   );
+
   const [loading, setLoading] = useState(false);
 
   const searchEarningsProjection = useCallback(async () => {
@@ -69,6 +73,7 @@ const Gains: React.FC = () => {
       <Grid type={"container"}>
         <Grid type={"item"} xs={2}>
           <DatePickers
+            value={purchasedAt}
             label="Data da compra"
             onChange={(e) => {
               setPurchasedAt(e.target.value);
@@ -91,21 +96,38 @@ const Gains: React.FC = () => {
       </Grid>
 
       <Grid type={"container"}>
-        <LineItem xs={4}>Nome : {projectionGains.name}</LineItem>
         <LineItem xs={4}>
-          Data da cotação atual : {projectionGains.purchasedAt}
+          Nome : {projectionGains.name ? projectionGains.name : ""}
         </LineItem>
         <LineItem xs={4}>
-          Preço na data de compra : {formatPrice(projectionGains.priceAtDate)}
+          Data da cotação atual :{" "}
+          {projectionGains.purchasedAt
+            ? formatDate(projectionGains.purchasedAt)
+            : ""}
         </LineItem>
         <LineItem xs={4}>
-          Preço mais recente : {formatPrice(projectionGains.lastPrice)}
+          Preço na data de compra :{" "}
+          {projectionGains.priceAtDate
+            ? formatPrice(projectionGains.priceAtDate)
+            : ""}
         </LineItem>
         <LineItem xs={4}>
-          Quantidade da compra : {projectionGains.purchasedAmount}
+          Preço mais recente :{" "}
+          {projectionGains.lastPrice
+            ? formatPrice(projectionGains.lastPrice)
+            : ""}
         </LineItem>
         <LineItem xs={4}>
-          Ganhos : {formatPrice(projectionGains.capitalGains)}
+          Quantidade da compra :{" "}
+          {projectionGains.purchasedAmount
+            ? projectionGains.purchasedAmount
+            : ""}
+        </LineItem>
+        <LineItem xs={4}>
+          Ganhos :{" "}
+          {projectionGains.capitalGains
+            ? formatPrice(projectionGains.capitalGains)
+            : ""}
         </LineItem>
       </Grid>
     </>
