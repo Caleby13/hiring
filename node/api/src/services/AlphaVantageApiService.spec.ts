@@ -21,4 +21,12 @@ describe('AlphaVantage Api Service', () => {
     expect(searchQuoteEndpoint.lastPrice).toBeTruthy()
     expect(searchQuoteEndpoint.pricedAt).toBeTruthy()
   })
+
+  test('Shold return the historical price of the share in an inclusive range (service actionHistorySearch)', async () => {
+    const sut = makeSut()
+    const actionHistorySearch: StockHistory = await sut.actionHistorySearch('IBM', '2021-08-02', '2021-07-02')
+    expect(actionHistorySearch).toBeTruthy()
+    expect(actionHistorySearch.name).toBeTruthy()
+    expect(actionHistorySearch.prices).toBeTruthy()
+  })
 })
