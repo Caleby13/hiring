@@ -5,6 +5,7 @@ const makeSut = (): AlphaVantageApiService => {
   return sut
 }
 
+jest.setTimeout(30000)
 describe('AlphaVantage Api Service', () => {
   test('Shold return the stock endpoint names (service stockNamesSearch)', async () => {
     const sut = makeSut()
