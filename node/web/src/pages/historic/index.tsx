@@ -1,8 +1,8 @@
+import {format} from 'date-fns'
 import React, {useCallback, useState} from 'react'
-import {useRouteMatch} from 'react-router-dom'
+import {useHistory, useParams} from 'react-router-dom'
 import {toast} from 'react-toastify'
 import {Button} from '../../components/Button'
-import {ButtonRedirect} from '../../components/ButtonRedirect'
 import {DatePickers} from '../../components/DatePickers'
 import {Divider} from '../../components/Divider'
 import {Grid} from '../../components/Grid'
@@ -11,11 +11,6 @@ import {Loading} from '../../components/Loading'
 import {Title} from '../../components/Title/indes'
 import api from '../../services/api'
 import {formatDate, formatPrice} from '../../utils'
-import {format} from 'date-fns'
-
-interface HistoricProps {
-  actionName: string
-}
 
 interface StockHistory {
   name: string
@@ -33,17 +28,23 @@ interface PriceHistory {
 const Historic: React.FC = () => {
   const currentDate = format(new Date(), 'yyyy-MM-dd')
 
-  const {params} = useRouteMatch<HistoricProps>()
+  const history = useHistory()
+  const {actionName} = useParams<{actionName: string}>()
+
   const [toDate, setToDate] = useState(currentDate)
   const [fromDate, setFromDate] = useState(currentDate)
   const [priceHistory, setPriceHistory] = useState<PriceHistory[]>([])
   const [loading, setLoading] = useState(false)
 
+  const goToFavorites = () => {
+    history.goBack()
+  }
+
   const searchHistory = useCallback(async () => {
     try {
       setLoading(true)
       const {data} = await api.get<StockHistory>(
-        `/stocks/${params.actionName}/history`,
+        `/stocks/${actionName}/history`,
         {
           params: {
             to: toDate,
@@ -58,7 +59,7 @@ const Historic: React.FC = () => {
     } finally {
       setLoading(false)
     }
-  }, [params.actionName, toDate, fromDate])
+  }, [actionName, toDate, fromDate])
 
   if (loading) {
     return <Loading />
@@ -68,7 +69,7 @@ const Historic: React.FC = () => {
     <>
       <Grid type={'container'}>
         <Grid type={'item'} xs={3}>
-          <ButtonRedirect to="/favorites">Ir para tela anterior</ButtonRedirect>
+          <Button onClick={goToFavorites}>Ir para tela anterior</Button>
         </Grid>
       </Grid>
       <Grid type={'container'} justifyContent={'flex-start'}>
@@ -94,7 +95,7 @@ const Historic: React.FC = () => {
           <Button onClick={searchHistory}>Buscar Registros</Button>
         </Grid>
       </Grid>
-      <Title>{params.actionName}</Title>
+      <Title>{actionName}</Title>
       {priceHistory.map((item) => (
         <>
           <Grid type={'container'}>
