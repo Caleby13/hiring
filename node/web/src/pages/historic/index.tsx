@@ -10,7 +10,7 @@ import {LineItem} from '../../components/LineItem'
 import {Loading} from '../../components/Loading'
 import {Title} from '../../components/Title/indes'
 import api from '../../services/api'
-import {formatDate, formatPrice} from '../../utils'
+import {formatDate, formatPrice, formatToISOStringDate} from '../../utils'
 
 interface StockHistory {
   name: string
@@ -47,8 +47,8 @@ const Historic: React.FC = () => {
         `/stocks/${actionName}/history`,
         {
           params: {
-            to: toDate,
-            from: fromDate
+            to: formatToISOStringDate(toDate),
+            from: formatToISOStringDate(fromDate)
           }
         }
       )

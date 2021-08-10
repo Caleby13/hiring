@@ -9,7 +9,7 @@ import {LineItem} from '../../components/LineItem'
 import {Loading} from '../../components/Loading'
 import {TextField} from '../../components/TextField'
 import api from '../../services/api'
-import {formatDate, formatPrice} from '../../utils'
+import {formatDate, formatPrice, formatToISOStringDate} from '../../utils'
 
 interface GainsProps {
   actionName: string
@@ -49,7 +49,7 @@ const Gains: React.FC = () => {
         {
           params: {
             purchasedAmount,
-            purchasedAt
+            purchasedAt: formatToISOStringDate(purchasedAt)
           }
         }
       )
