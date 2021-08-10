@@ -1,8 +1,8 @@
+import {format} from 'date-fns'
 import React, {useCallback, useState} from 'react'
-import {useRouteMatch} from 'react-router-dom'
+import {useHistory, useParams} from 'react-router-dom'
 import {toast} from 'react-toastify'
 import {Button} from '../../components/Button'
-import {ButtonRedirect} from '../../components/ButtonRedirect'
 import {DatePickers} from '../../components/DatePickers'
 import {Grid} from '../../components/Grid'
 import {LineItem} from '../../components/LineItem'
@@ -10,7 +10,6 @@ import {Loading} from '../../components/Loading'
 import {TextField} from '../../components/TextField'
 import api from '../../services/api'
 import {formatDate, formatPrice} from '../../utils'
-import {format} from 'date-fns'
 
 interface GainsProps {
   actionName: string
@@ -26,23 +25,27 @@ interface EarningsProjection {
 }
 
 const Gains: React.FC = () => {
-  const {params} = useRouteMatch<GainsProps>()
+  const {actionName} = useParams<GainsProps>()
 
   const currentDate = format(new Date(), 'yyyy-MM-dd')
+  const history = useHistory()
 
   const [purchasedAmount, setPurchasedAmount] = useState<string>('0')
   const [purchasedAt, setPurchasedAt] = useState<string>(currentDate)
   const [projectionGains, setProjectionGains] = useState<EarningsProjection>(
     {} as EarningsProjection
   )
-
   const [loading, setLoading] = useState(false)
+
+  const goToFavorites = () => {
+    history.goBack()
+  }
 
   const searchEarningsProjection = useCallback(async () => {
     try {
       setLoading(true)
       const {data} = await api.get<EarningsProjection>(
-        `stocks/${params.actionName}/gains`,
+        `stocks/${actionName}/gains`,
         {
           params: {
             purchasedAmount,
@@ -59,7 +62,7 @@ const Gains: React.FC = () => {
     } finally {
       setLoading(false)
     }
-  }, [params.actionName, purchasedAmount, purchasedAt])
+  }, [actionName, purchasedAmount, purchasedAt])
 
   if (loading) {
     return <Loading />
@@ -69,7 +72,7 @@ const Gains: React.FC = () => {
     <>
       <Grid type={'container'}>
         <Grid type={'item'} xs={3}>
-          <ButtonRedirect to="/favorites">Ir para tela anterior</ButtonRedirect>
+          <Button onClick={goToFavorites}>Ir para tela anterior</Button>
         </Grid>
       </Grid>
       <Grid type={'container'}>
