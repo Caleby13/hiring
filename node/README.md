@@ -12,8 +12,8 @@ Projeto utilizando node, typescript, express, jest.\
    ```sh
    cd node/api
    ```
-3. Edite o arquivo .env e preencha com dados obrigatórios
-Obs: O token pode ser gerado no site Alpha Vantage [click aqui](https://www.alphavantage.co/support/#api-key)
+3. Edite o arquivo .env e preencha com dados obrigatórios <br />
+   Obs: O token pode ser gerado no site Alpha Vantage [click aqui](https://www.alphavantage.co/support/#api-key)
 
 4. Instale os pacotes npm
    ```sh
