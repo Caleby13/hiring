@@ -3,7 +3,7 @@ import {toast} from 'react-toastify'
 import {ButtonRedirect} from '../../components/ButtonRedirect'
 import {Grid} from '../../components/Grid'
 import {Title} from '../../components/Title/indes'
-import {FavoriteItem} from './favoviteItem'
+import {FavoriteItem} from './components/favoviteItem'
 
 const Favorites: React.FC = () => {
   const FAVORITEKEY = '@favorites'

@@ -1,12 +1,12 @@
 import {Divider} from '@material-ui/core'
 import React, {useCallback, useEffect, useState} from 'react'
 import {toast} from 'react-toastify'
-import {Button} from '../../../components/Button'
-import {ButtonRedirect} from '../../../components/ButtonRedirect'
-import {Grid} from '../../../components/Grid'
-import {LineItem} from '../../../components/LineItem'
-import api from '../../../services/api'
-import {formatDateTime, formatPrice} from '../../../utils'
+import {Button} from '../../../../components/Button'
+import {ButtonRedirect} from '../../../../components/ButtonRedirect'
+import {Grid} from '../../../../components/Grid'
+import {LineItem} from '../../../../components/LineItem'
+import api from '../../../../services/api'
+import {formatDateTime, formatPrice} from '../../../../utils'
 
 interface PriceLastAction {
   name: string
