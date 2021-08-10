@@ -1,6 +1,7 @@
 import React, {useCallback, useEffect, useState} from 'react'
+import {useHistory} from 'react-router-dom'
 import {toast} from 'react-toastify'
-import {ButtonRedirect} from '../../components/ButtonRedirect'
+import {Button} from '../../components/Button'
 import {Grid} from '../../components/Grid'
 import {Title} from '../../components/Title/indes'
 import {FavoriteItem} from './components/favoviteItem'
@@ -8,7 +9,13 @@ import {FavoriteItem} from './components/favoviteItem'
 const Favorites: React.FC = () => {
   const FAVORITEKEY = '@favorites'
 
+  const history = useHistory()
+
   const [favorites, setFavorites] = useState<string[]>([])
+
+  const goToFavorites = () => {
+    history.goBack()
+  }
 
   const searchFavorites = useCallback(() => {
     const persistFavorite = localStorage.getItem(FAVORITEKEY)
@@ -48,7 +55,7 @@ const Favorites: React.FC = () => {
     <>
       <Grid type={'container'}>
         <Grid type={'item'} xs={3}>
-          <ButtonRedirect to="/">Ir para tela anterior</ButtonRedirect>
+          <Button onClick={goToFavorites}>Ir para tela anterior</Button>
         </Grid>
       </Grid>
       <Title>ÚLTIMA COTAÇÃO</Title>
