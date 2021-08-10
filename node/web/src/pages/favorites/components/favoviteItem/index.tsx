@@ -1,7 +1,6 @@
 import {Divider} from '@material-ui/core'
 import React, {useCallback, useEffect, useState} from 'react'
 import {useHistory} from 'react-router-dom'
-import {toast} from 'react-toastify'
 import {Button} from '../../../../components/Button'
 import {Grid} from '../../../../components/Grid'
 import {LineItem} from '../../../../components/LineItem'
@@ -37,8 +36,7 @@ export const FavoriteItem = ({actionName, handleDelete}: ActionNameProps) => {
       const {data} = await api.get(`/stocks/${actionName}/quote`)
       setStock(data)
     } catch (err) {
-      const message = err?.response?.data?.error?.message || 'Erro'
-      toast.error(message)
+      console.log(err)
     } finally {
     }
   }, [actionName])
