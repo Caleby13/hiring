@@ -1,8 +1,8 @@
 import {Divider} from '@material-ui/core'
 import React, {useCallback, useEffect, useState} from 'react'
+import {useHistory} from 'react-router-dom'
 import {toast} from 'react-toastify'
 import {Button} from '../../../../components/Button'
-import {ButtonRedirect} from '../../../../components/ButtonRedirect'
 import {Grid} from '../../../../components/Grid'
 import {LineItem} from '../../../../components/LineItem'
 import api from '../../../../services/api'
@@ -20,7 +20,17 @@ interface ActionNameProps {
 }
 
 export const FavoriteItem = ({actionName, handleDelete}: ActionNameProps) => {
+  const history = useHistory()
+
   const [stock, setStock] = useState<PriceLastAction>({} as PriceLastAction)
+
+  const goToHistoric = () => {
+    history.push(`/historic/${actionName}`)
+  }
+
+  const goToGains = () => {
+    history.push(`/gains/${actionName}`)
+  }
 
   const actionsSearch = useCallback(async () => {
     try {
@@ -52,22 +62,14 @@ export const FavoriteItem = ({actionName, handleDelete}: ActionNameProps) => {
             : 'Buscando...'}
         </LineItem>
         <Grid type={'item'} xs={1}>
-          <ButtonRedirect
-            variant={'outlined'}
-            size={'small'}
-            to={`historic/${actionName}`}
-          >
+          <Button variant={'outlined'} size={'small'} onClick={goToHistoric}>
             Historico
-          </ButtonRedirect>
+          </Button>
         </Grid>
         <Grid type={'item'} xs={2}>
-          <ButtonRedirect
-            variant={'outlined'}
-            size={'small'}
-            to={`/gains/${actionName}`}
-          >
+          <Button variant={'outlined'} size={'small'} onClick={goToGains}>
             Projeção de ganhos
-          </ButtonRedirect>
+          </Button>
         </Grid>
         <Grid type={'item'} xs={1}>
           <Button
@@ -84,5 +86,3 @@ export const FavoriteItem = ({actionName, handleDelete}: ActionNameProps) => {
     </div>
   )
 }
-
-export default FavoriteItem
