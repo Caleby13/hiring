@@ -1,7 +1,7 @@
 import React, {useCallback, useEffect, useState} from 'react'
+import {useHistory} from 'react-router-dom'
 import {toast} from 'react-toastify'
 import {Button} from '../../components/Button'
-import {ButtonRedirect} from '../../components/ButtonRedirect'
 import {Divider} from '../../components/Divider'
 import {Grid} from '../../components/Grid'
 import {LineItem} from '../../components/LineItem'
@@ -12,10 +12,16 @@ import api from '../../services/api'
 const Home: React.FC = () => {
   const FAVORITEKEY = '@favorites'
 
-  const [keywords, setKeywords] = useState('')
+  const history = useHistory()
+
+  const [keyword, setKeyword] = useState('')
   const [rows, setRows] = useState<string[]>([])
   const [loading, setLoading] = useState(false)
   const [favorites, setFavorites] = useState<string[]>([])
+
+  const goToFavorites = () => {
+    history.push('/favorites')
+  }
 
   const addFavorite = useCallback(
     (item: string) => {
@@ -38,11 +44,11 @@ const Home: React.FC = () => {
   const searchEndpoint = useCallback(async () => {
     try {
       setLoading(true)
-      if (!keywords) {
+      if (!keyword) {
         toast.error('Informe o nome da ação que deseja buscar')
         return
       }
-      const {data} = await api.get(`/stocks/searchEndpoint/${keywords}`)
+      const {data} = await api.get(`/stocks/searchEndpoint/${keyword}`)
       setRows(data)
     } catch (err) {
       const message = err?.response?.data?.error?.message || 'Erro'
@@ -50,7 +56,7 @@ const Home: React.FC = () => {
     } finally {
       setLoading(false)
     }
-  }, [keywords])
+  }, [keyword])
 
   useEffect(() => {
     const persistFavorite = localStorage.getItem(FAVORITEKEY)
@@ -75,13 +81,13 @@ const Home: React.FC = () => {
           xs={8}
           placeHolder={'Insira o nome da ação desejada. Ex: PETR4.SA, VALE5.SA'}
           label={'Nome da ação'}
-          onChange={(e) => setKeywords(e.target.value)}
+          onChange={(e) => setKeyword(e.target.value)}
         />
         <Grid type={'item'} xs={2}>
           <Button onClick={searchEndpoint}>Buscar</Button>
         </Grid>
         <Grid type={'item'} xs={2}>
-          <ButtonRedirect to="/favorites">Favoritos</ButtonRedirect>
+          <Button onClick={goToFavorites}>Favoritos</Button>
         </Grid>
       </Grid>
       {rows.map((item) => (
