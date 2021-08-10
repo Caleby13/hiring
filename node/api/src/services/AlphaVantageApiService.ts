@@ -201,13 +201,14 @@ class AlphaVantageApiService {
     const lastPrice = Number(timeSeriesDailyAjusted['Time Series (Daily)'][lastRefreshed]['4. close'])
     const quoteDates = Object.keys(timeSeriesDailyAjusted['Time Series (Daily)'])
     const dateOfLastQuoteBeforePurchase = this.searchQuoteDate(quoteDates, purchasedAt)
+    console.log(dateOfLastQuoteBeforePurchase)
     const priceAtDate = Number(timeSeriesDailyAjusted['Time Series (Daily)'][dateOfLastQuoteBeforePurchase]['4. close'])
     const capitalGains = (lastPrice * Number(purchasedAmount)) - (priceAtDate * Number(purchasedAmount))
 
     const earningsProjection: EarningsProjection = {
       name,
       purchasedAmount,
-      purchasedAt,
+      purchasedAt: stringToDateISO(purchasedAt),
       priceAtDate,
       lastPrice,
       capitalGains
